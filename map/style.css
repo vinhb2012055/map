@@ -1,0 +1,31 @@
+#left{
+    position: absolute;
+    width: 14%;
+    height: 95%;
+    border: 1px solid blue;
+}
+#map{
+    position: absolute;
+    left: 15%;
+    width: 70%;
+    height: 95%;
+    border: 1px solid red;
+}
+#right{
+    position: absolute;
+    right: 5px;
+    width: 15%;
+    height: 95%;
+    overflow-y: auto;
+    border: 1px solid blue;
+}
+
+.custom .leaflet-popup-tip,
+
+.custom .leaflet-popup-content-wrapper {
+
+background: rgb(50, 40, 5);
+
+color: #ffffff;
+
+}
