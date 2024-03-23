@@ -38,37 +38,42 @@
         map.addLayer(layer);
         L.control.locate().addTo(map);
         L.Control.geocoder().addTo(map);
+        
+//         var geocoder = L.Control.geocoder({
+//   defaultMarkGeocode: false
+// })
+//   .on('markgeocode', function(e) {
+//     var bbox = e.geocode.bbox;
+//     var poly = L.polygon([
+//       bbox.getSouthEast(),
+//       bbox.getNorthEast(),
+//       bbox.getNorthWest(),
+//       bbox.getSouthWest()
+//     ]).addTo(map);
+//     map.fitBounds(poly.getBounds());
+//   })
+//   .addTo(map);
+
         //tạo icon cho ping
         var greenIcon = L.icon({
         iconUrl: 'school.png',
         iconSize:[20, 30]
         });
         //tạo ping(marker)
- if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                var latitude = position.coords.latitude;
-                var longitude = position.coords.longitude;
-
-                // Tạo marker và đặt vị trí là vị trí hiện tại của người dùng
-                var marker = new L.marker([latitude, longitude], {
-                    icon: greenIcon,
-                    title: "Vị trí hiện tại của bạn"
-                }).addTo(map);
-
-                marker.bindPopup('Vị trí hiện tại của bạn').openPopup();
-
-            });
-        } else {
-            // Xử lý trường hợp trình duyệt không hỗ trợ geolocation
-            alert('Trình duyệt của bạn không hỗ trợ xác định vị trí.');
-        }
+        var marker = new L.marker([10.030007,105.770602], {icon: greenIcon, title: "Đại Học Cần Thơ", alt: "CTU"});
+        marker. addTo(map);
+        marker.bindPopup('<b>Trường Đại Học Cần Thơ</b><br>thông tin trường đại học cần thơ vd:ảnh trường <div><img style ="Width:100%"src="https://lh5.googleusercontent.com/p/AF1QipNGc1cYKEs4SKRrGjrOTTNKALrSo5KKBQKsvIps=w427-h240-k-no" alt="image"/></div>').openPopup();
+        var popup = L.popup();
+        
 		map.on('click', function (e) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+        var startWaypoint = L.latLng(position.coords.latitude, position.coords.longitude);
 			console.log(e)
 			var newMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
 			L.Routing.control({
 				waypoints: [
-					L.latLng(latitude, longitude),
-					L.latLng(e.latlng.lat, e.latlng.lng)
+					startWaypoint,
+					e.latlng
 				]
 			}).on('routesfound', function (e) {
 				var routes = e.routes;
@@ -81,6 +86,7 @@
 				})
 
 			}).addTo(map);
+        });
 		});
     </script>
 <?php
