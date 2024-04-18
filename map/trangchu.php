@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <link rel="stylesheet" href="style.css">
-    <link href="custom.geo.js" />
+    <link href="locat.geo.js" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
@@ -25,7 +25,7 @@
         // Create map
         var mapOptions = {
             center: [10.030007, 105.770602],
-            zoom: 13
+            zoom: 25
         };
 
         var map = new L.map('map', mapOptions);
@@ -97,11 +97,11 @@ function addMarkerInfo(marker, lat, lng, title, address, website, imageSrc) {
 
 // Tạo marker cho tọa độ trường Đại học Cần Thơ và thêm thông tin
 var ctuMarker = L.marker([10.029949014241762, 105.77061746343495], {icon: greenIcon}).addTo(map);
-addMarkerInfo(ctuMarker, 10.029949014241762, 105.77061746343495, "Trường Đại Học Cần Thơ", "Đại học Cần Thơ, Cần Thơ", "https://www.ctu.edu.vn/", "ĐHCT.jpg");
+addMarkerInfo(ctuMarker, 10.029949014241762, 105.77061746343495, "Trường Đại Học Cần Thơ", "Khu II, Đ. 3 Tháng 2, Xuân Khánh, Ninh Kiều, Cần Thơ", "https://www.ctu.edu.vn/", "ĐHCT.jpg");
 
 // Tạo marker cho tọa độ Cầu Hưng Lợi và thêm thông tin
-var hungLoiMarker = L.marker([10.029456427005876, 105.76964248420876]).addTo(map);
-addMarkerInfo(hungLoiMarker, 10.029456427005876, 105.76964248420876, "Cầu Hưng Lợi", "Cầu Hưng Lợi, Cần Thơ", "#", "y_duoc.jpg");
+var hungLoiMarker = L.marker([10.033465755809788, 105.75464370216395], {icon: greenIcon}).addTo(map);
+addMarkerInfo(hungLoiMarker, 10.033465755809788, 105.75464370216395, "Đại Học Y Dược Cần Thơ", "Số 179 Đ. Nguyễn Văn Cừ, Phường An Khánh, Ninh Kiều, Cần Thơ", "http://www.ctump.edu.vn", "y_duoc.jpg");
 
 
 
@@ -151,7 +151,7 @@ addMarkerInfo(hungLoiMarker, 10.029456427005876, 105.76964248420876, "Cầu Hưn
             // Lấy vị trí hiện tại của người dùng
             map.locate({
                 setView: true,
-                maxZoom: 15
+                maxZoom: 25
             });
         });
         
