@@ -87,51 +87,6 @@
         // Variable to store routing control
         var routingControl;
 
-        // // Function to add marker information and events
-        // function addMarkerInfo(marker, lat, lng, title, address, website, imageSrc) {
-        //     marker.on('click', function (e) {
-        //         var info = '<h2>Thông tin điểm đến</h2>';
-        //         info += '<p><b>Tiêu đề:</b> ' + title + '</p>';
-        //         info += '<p><b>Địa chỉ:</b> ' + address + '</p>';
-        //         info += '<p><b>Website:</b> <a href="' + website + '">' + website + '</a></p>';
-        //         info += '<div><img style="width:100%" src="' + imageSrc + '" alt="' + title + '"></div>';
-        //         info += '<button id="closeInfo">Đóng</button>'; // Add close button
-        //         info += '<button id="findRoute">Tìm đường đi</button>'; // Add route button
-        //         displayDestinationInfo(info);
-
-        //         // Event listener for closing info window
-        //         document.getElementById("closeInfo").addEventListener("click", function () {
-        //             document.getElementById("left").innerHTML = "";
-        //             if (routingControl) {
-        //                 map.removeControl(routingControl);
-        //             }
-        //         });
-
-        //         // Event listener for finding route
-        //         document.getElementById("findRoute").addEventListener("click", function () {
-        //             map.locate({
-        //                 setView: true,
-        //                 maxZoom: 15
-        //             });
-
-        //             map.once('locationfound', function (e) {
-        //                 // Clear any existing routing control
-        //                 if (routingControl) {
-        //                     map.removeControl(routingControl);
-        //                 }
-
-        //                 routingControl = L.Routing.control({
-        //                     waypoints: [
-        //                         e.latlng, // User's location
-        //                         marker.getLatLng() // Marker's location
-        //                     ],
-        //                     routeWhileDragging: true
-        //                 }).addTo(map);
-        //             });
-        //         });
-        //     });
-        // }
-
         // Function to handle map click event
         map.on('click', function (e) {
             var lat = e.latlng.lat;
@@ -192,11 +147,10 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
+//------------------------------------------------- HIỂN THỊ MARKER TRƯỜNG HỌC ---------------------------------------------
 // Truy vấn dữ liệu từ bảng `truonghoc`
 $sql = "SELECT * FROM truonghoc";
 $result = $conn->query($sql);
-
 if ($result->num_rows > 0) {
     // Duyệt qua từng dòng dữ liệu
     while($row = $result->fetch_assoc()) {
@@ -208,16 +162,10 @@ if ($result->num_rows > 0) {
         $th_vido = $row["th_vido"];
         $th_image = $row["th_image"];
         ?>
-        
         var marker<?php echo $th_ma ?> = L.marker([<?php echo $th_kinhdo ?>, <?php echo $th_vido ?>], {icon: greenIcon}).addTo(map);
         addMarkerInfo(marker<?php echo $th_ma ?>, <?php echo $th_kinhdo ?>, <?php echo $th_vido ?>, "<?php echo $th_ten ?>", "<?php echo $th_diachi ?>", "", "<?php echo $th_image ?>");
-        
         // Tạo marker và thêm vào bản đồ
-
-        
-
         <?php
-     
     }
 } else {
     echo "0 results";
@@ -231,7 +179,7 @@ function addMarkerInfo(marker, lat, lng, title, address, website, imageSrc) {
                 var info = '<h2>Thông tin điểm đến</h2>';
                 info += '<p><b>Tiêu đề:</b> ' + title + '</p>';
                 info += '<p><b>Địa chỉ:</b> ' + address + '</p>';
-                info += '<p><b>Website:</b> <a href="' + website + '">' + website + '</a></p>';
+                // info += '<p><b>Website:</b> <a href="' + website + '">' + website + '</a></p>';
                 info += '<div><img style="width:100%" src="' + imageSrc + '" alt="' + title + '"></div>';
                 info += '<button id="closeInfo">Đóng</button>'; // Add close button
                 info += '<button id="findRoute">Tìm đường đi</button>'; // Add route button
@@ -269,6 +217,17 @@ function addMarkerInfo(marker, lat, lng, title, address, website, imageSrc) {
                 });
             });
         }
+
+
+        
+
+        
+
+
+
+
+
+
 </script>
 
 </body>

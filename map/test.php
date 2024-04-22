@@ -50,6 +50,11 @@
             iconSize: [20, 30]
         });
 
+        var ntIcon = L.icon({
+            iconUrl: 'nhatro.png',
+            iconSize: [25, 30]
+        });
+
         map.addLayer(layer);
 
         // Adding different map layers
@@ -87,13 +92,133 @@
         // Variable to store routing control
         var routingControl;
 
-        // Function to add marker information and events
-        function addMarkerInfo(marker, lat, lng, title, address, website, imageSrc) {
+        // Function to handle map click event
+        map.on('click', function (e) {
+            var lat = e.latlng.lat;
+            var lng = e.latlng.lng;
+
+            var info = '<h2>Thông tin điểm đến</h2>';
+            info += '<p><b>Kinh độ:</b> ' + lat + '</p>';
+            info += '<p><b>Vĩ độ:</b> ' + lng + '</p>';
+            info += '<button id="findRoute">Tìm đường đi</button>';
+            info += '<button id="closeInfo">Đóng</button>';
+
+            displayDestinationInfo(info);
+
+            document.getElementById("findRoute").addEventListener("click", function () {
+                map.locate({
+                    setView: true,
+                    maxZoom: 15
+                });
+
+                map.once('locationfound', function (e) {
+                    // Clear any existing routing control
+                    if (routingControl) {
+                        map.removeControl(routingControl);
+                    }
+
+                    routingControl = L.Routing.control({
+                        waypoints: [
+                            e.latlng, // User's location
+                            L.latLng(lat, lng) // Clicked location on map
+                        ],
+                        routeWhileDragging: true
+                    }).addTo(map);
+                });
+            });
+
+            document.getElementById("closeInfo").addEventListener("click", function () {
+                document.getElementById("left").innerHTML = "";
+                if (routingControl) {
+                    map.removeControl(routingControl);
+                }
+            });
+
+            map.locate({
+                setView: true,
+                maxZoom: 15
+            });
+        });
+
+
+
+
+
+
+<?php
+// ------------------------------------------------- HIỂN THỊ MARKER NHA TRO ---------------------------------------------
+
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "httt_dialy";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Truy vấn dữ liệu từ bảng `nha_tro`
+$sql = "SELECT * FROM nha_tro";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+    // Duyệt qua từng dòng dữ liệu
+    while($row = $result->fetch_assoc()) {
+        // Lấy thông tin từ cột trong dòng hiện tại
+        $nt_id = $row["nt_id"];
+        $nt_ten = $row["nt_ten"];
+        $nt_diachi = $row["nt_diachi"];
+        $nt_kinhdo = $row["nt_kinhdo"];
+        $nt_vido = $row["nt_vido"];
+        $nt_image = $row["nt_image"];
+        ?>
+        var marker<?php echo $nt_id ?> = L.marker([<?php echo $nt_kinhdo ?>, <?php echo $nt_vido ?>], {icon: ntIcon}).addTo(map);
+        addMarkerInfo(marker<?php echo $nt_id ?>, <?php echo $nt_kinhdo ?>, <?php echo $nt_vido ?>, "<?php echo $nt_ten ?>", "<?php echo $nt_diachi ?>", "", "<?php echo $nt_image ?>");
+        // Tạo marker và thêm vào bản đồ
+        <?php
+    }
+} else {
+    echo "0 results";
+}
+
+// Đóng kết nối đến cơ sở dữ liệu
+
+//------------------------------------------------- HIỂN THỊ MARKER TRƯỜNG HỌC ---------------------------------------------
+// Truy vấn dữ liệu từ bảng `truonghoc`
+$sql = "SELECT * FROM truonghoc";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+    // Duyệt qua từng dòng dữ liệu
+    while($row = $result->fetch_assoc()) {
+        // Lấy thông tin từ cột trong dòng hiện tại
+        $th_ma = $row["th_ma"];
+        $th_ten = $row["th_ten"];
+        $th_diachi = $row["th_diachi"];
+        $th_kinhdo = $row["th_kinhdo"];
+        $th_vido = $row["th_vido"];
+        $th_image = $row["th_image"];
+        ?>
+        var marker<?php echo $th_ma ?> = L.marker([<?php echo $th_kinhdo ?>, <?php echo $th_vido ?>], {icon: greenIcon}).addTo(map);
+        addMarkerInfo(marker<?php echo $th_ma ?>, <?php echo $th_kinhdo ?>, <?php echo $th_vido ?>, "<?php echo $th_ten ?>", "<?php echo $th_diachi ?>", "", "<?php echo $th_image ?>");
+        // Tạo marker và thêm vào bản đồ
+        <?php
+    }
+} else {
+    echo "0 results";
+}
+
+
+
+
+?>
+
+// Function to add marker information and events
+function addMarkerInfo(marker, lat, lng, title, address, website, imageSrc) {
             marker.on('click', function (e) {
                 var info = '<h2>Thông tin điểm đến</h2>';
                 info += '<p><b>Tiêu đề:</b> ' + title + '</p>';
                 info += '<p><b>Địa chỉ:</b> ' + address + '</p>';
-                info += '<p><b>Website:</b> <a href="' + website + '">' + website + '</a></p>';
+                // info += '<p><b>Website:</b> <a href="' + website + '">' + website + '</a></p>';
                 info += '<div><img style="width:100%" src="' + imageSrc + '" alt="' + title + '"></div>';
                 info += '<button id="closeInfo">Đóng</button>'; // Add close button
                 info += '<button id="findRoute">Tìm đường đi</button>'; // Add route button
@@ -132,51 +257,16 @@
             });
         }
 
-        <?php
-// Kết nối đến cơ sở dữ liệu
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "httt_dialy";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Truy vấn dữ liệu từ bảng `truonghoc`
-$sql = "SELECT * FROM truonghoc";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    // Duyệt qua từng dòng dữ liệu
-    while($row = $result->fetch_assoc()) {
-        // Lấy thông tin từ cột trong dòng hiện tại
-        $th_ma = $row["th_ma"];
-        $th_ten = $row["th_ten"];
-        $th_diachi = $row["th_diachi"];
-        $th_kinhdo = $row["th_kinhdo"];
-        $th_vido = $row["th_vido"];
-        ?>
-        
-        var marker<?php echo $th_ma ?> = L.marker([<?php echo $th_kinhdo ?>, <?php echo $th_vido ?>], {icon: greenIcon}).addTo(map);
-        addMarkerInfo(marker<?php echo $th_ma ?>, <?php echo $th_kinhdo ?>, <?php echo $th_vido ?>, "<?php echo $th_ten ?>", "<?php echo $th_diachi ?>", "", "");
-        
-
-      
-        
-        // Tạo marker và thêm vào bản đồ
 
         
 
-        <?php
-     
-    }
-} else {
-    echo "0 results";
-}
-$conn->close();
-?>
+        
+
+
+
+
+
+
 </script>
 
 </body>
